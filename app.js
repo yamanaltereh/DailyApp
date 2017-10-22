@@ -10,6 +10,28 @@ var users = require('./routes/users');
 
 var app = express();
 
+// DB connection
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('daily_app_dev', '', '', {
+  host: 'localhost',
+  port: 5432,
+  dialect: 'postgres',
+  database: 'daily_app_dev',
+
+  pool: {
+    max: 1,
+    min: 0,
+    idle: 10000
+  }
+});
+
+sequelize.authenticate().then(() => {
+  console.log('Connection has been established successfully.');
+})
+.catch(err => {
+  console.error('Unable to connect to the database:', err);
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
