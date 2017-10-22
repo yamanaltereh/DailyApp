@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('config');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -11,13 +12,13 @@ var users = require('./routes/users');
 var app = express();
 
 // DB connection
+var dbConfig = config.get('dbConfig');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('daily_app_dev', '', '', {
-  host: 'localhost',
-  port: 5432,
+const sequelize = new Sequelize(dbConfig.get('dbName'), '', '', {
+  host: dbConfig.get('host'),
+  port: dbConfig.get('port'),
   dialect: 'postgres',
-  database: 'daily_app_dev',
-
+  database: dbConfig.get('dbName'),
   pool: {
     max: 1,
     min: 0,
