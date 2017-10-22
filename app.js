@@ -11,28 +11,6 @@ var users = require('./routes/users');
 
 var app = express();
 
-// DB connection
-var dbConfig = config.get('dbConfig');
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(dbConfig.get('dbName'), '', '', {
-  host: dbConfig.get('host'),
-  port: dbConfig.get('port'),
-  dialect: 'postgres',
-  database: dbConfig.get('dbName'),
-  pool: {
-    max: 1,
-    min: 0,
-    idle: 10000
-  }
-});
-
-sequelize.authenticate().then(() => {
-  console.log('Connection has been established successfully.');
-})
-.catch(err => {
-  console.error('Unable to connect to the database:', err);
-});
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -47,6 +25,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+
+app.set('models', require('./models'));
+// var User = app.get('models').User;
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
